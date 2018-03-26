@@ -156,6 +156,8 @@ func (m *Mocker) Mock(w io.Writer, name ...string) error {
 		doc.Objects = append(doc.Objects, obj)
 	}
 
+	doc.Imports = append(doc.Imports, "fmt")
+
 	if mocksMethods {
 		doc.Imports = append(doc.Imports, "sync")
 	}

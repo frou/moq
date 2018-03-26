@@ -98,5 +98,26 @@ func (mock *{{$obj.InterfaceName}}Mock) {{.Name}}Calls() []struct {
 	lock{{$obj.InterfaceName}}Mock{{.Name}}.RUnlock()
 	return calls
 }
+
+// {{.Name}}CallCount TODO
+func (mock *{{$obj.InterfaceName}}Mock) {{.Name}}CallCount(expectedCount int) error {
+	lock{{$obj.InterfaceName}}Mock{{.Name}}.RLock()
+	actualCount := len(mock.calls.{{.Name}})
+	lock{{$obj.InterfaceName}}Mock{{.Name}}.RUnlock()
+	if actualCount == expectedCount {
+		return nil
+	}
+
+	expectedCountStr := fmt.Sprint(expectedCount)
+	if expectedCount == -1 {
+		if actualCount >= 1 {
+			return nil
+		}
+		expectedCountStr = "1+"
+	}
+	return fmt.Errorf(
+		"Expected '{{$obj.InterfaceName}}.{{.Name}}' method to be called %s times, but was called %d times",
+		expectedCountStr, actualCount)
+}
 {{ end -}}
 {{ end -}}`
